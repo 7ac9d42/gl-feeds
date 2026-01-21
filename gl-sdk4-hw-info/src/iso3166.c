@@ -1,5 +1,7 @@
 #include <linux/types.h>
 
+#include "gl-hw-info.h"
+
 struct iso3166_label {
     u16 iso3166;
     char name[28];
