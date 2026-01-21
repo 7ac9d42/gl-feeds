@@ -141,12 +141,20 @@ static int gl_fan_probe(struct platform_device *pdev)
     return 0;
 }
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 11, 0)
 static int gl_fan_remove(struct platform_device *pdev)
 {
     class_destroy(gl_fan.class);
     dev_info(&pdev->dev, "remove gl_fan\n");
     return 0;
 }
+#else
+static void gl_fan_remove(struct platform_device *pdev)
+{
+    class_destroy(gl_fan.class);
+    dev_info(&pdev->dev, "remove gl_fan\n");
+}
+#endif
 
 static const struct of_device_id gl_fan_match[] = {
     { .compatible = "gl-fan" },
