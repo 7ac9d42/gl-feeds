@@ -17,19 +17,36 @@ static int block_part_read(const char *part, unsigned int from,
 {
     pgoff_t index = from >> PAGE_SHIFT;
     int offset = from & (PAGE_SIZE - 1);
+    struct address_space *mapping;
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 9, 0)
+    const blk_mode_t mode = BLK_OPEN_READ;
+    struct file *bdev_file;
+#else
     const fmode_t mode = FMODE_READ;
     struct block_device *bdev;
+#endif
     struct page *page;
     char *buf = val;
     int cpylen;
+    int ret = 0;
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 9, 0)
+    bdev_file = bdev_file_open_by_path(part, mode, NULL, NULL);
+    if (IS_ERR(bdev_file))
+        return PTR_ERR(bdev_file);
+
+    mapping = bdev_file->f_mapping;
+#else
 #if LINUX_VERSION_CODE < KERNEL_VERSION(6, 5, 0)
     bdev = blkdev_get_by_path(part, mode, NULL);
 #else
     bdev = blkdev_get_by_path(part, mode, NULL, NULL);
 #endif
     if (IS_ERR(bdev))
-        return -1;
+        return PTR_ERR(bdev);
+
+    mapping = bdev->bd_inode->i_mapping;
+#endif
 
     while (bytes) {
         if ((offset + bytes) > PAGE_SIZE)
@@ -38,9 +55,11 @@ static int block_part_read(const char *part, unsigned int from,
             cpylen = bytes;
         bytes = bytes - cpylen;
 
-        page = read_mapping_page(bdev->bd_inode->i_mapping, index, NULL);
-        if (IS_ERR(page))
-            return PTR_ERR(page);
+        page = read_mapping_page(mapping, index, NULL);
+        if (IS_ERR(page)) {
+            ret = PTR_ERR(page);
+            goto out;
+        }
 
         memcpy(buf, page_address(page) + offset, cpylen);
         put_page(page);
@@ -50,13 +69,18 @@ static int block_part_read(const char *part, unsigned int from,
         index++;
     }
 
+out:
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 9, 0)
+    fput(bdev_file);
+#else
 #if LINUX_VERSION_CODE < KERNEL_VERSION(6, 5, 0)
     blkdev_put(bdev, mode);
 #else
     blkdev_put(bdev, NULL);
 #endif
+#endif
 
-    return 0;
+    return ret;
 }
 
 static int parse_mtd_value(const char *part, u32 offset, void *dest, int len)
