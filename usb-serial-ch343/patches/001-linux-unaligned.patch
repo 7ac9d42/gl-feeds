@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: OpenWrt <noreply@openwrt.org>
+Date: Wed, 21 Jan 2026 00:00:00 +0000
+Subject: [PATCH] driver: use linux/unaligned.h
+
+Linux 6.12 (arm64) no longer provides asm/unaligned.h for external modules.
+Use the generic linux/unaligned.h helpers instead.
+
+--- a/driver/ch343.c
++++ b/driver/ch343.c
+@@ -52,7 +52,7 @@
+ #include <linux/usb/cdc.h>
+ #include <linux/version.h>
+ #include <asm/byteorder.h>
+-#include <asm/unaligned.h>
++#include <linux/unaligned.h>
+ 
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0))
+ #include <linux/sched/signal.h>
