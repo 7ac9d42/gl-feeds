@@ -199,7 +199,7 @@ static int iface_open(struct inode *inode, struct file *file)
 }
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0)
-const static struct file_operations erdevices_ops = {
+static const struct file_operations erdevices_ops = {
     .owner      = THIS_MODULE,
     .open       = erdevices_open,
     .read       = seq_read,
@@ -208,7 +208,7 @@ const static struct file_operations erdevices_ops = {
     .release    = single_release
 };
 #else
-const static struct proc_ops erdevices_ops = {
+static const struct proc_ops erdevices_ops = {
     .proc_open       = erdevices_open,
     .proc_read       = seq_read,
     .proc_write      = erdevices_write,
@@ -218,7 +218,7 @@ const static struct proc_ops erdevices_ops = {
 #endif
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0)
-const static struct file_operations target_ip_ops = {
+static const struct file_operations target_ip_ops = {
     .owner      = THIS_MODULE,
     .open       = target_ip_open,
     .read       = seq_read,
@@ -227,7 +227,7 @@ const static struct file_operations target_ip_ops = {
     .release    = single_release
 };
 #else
-const static struct proc_ops target_ip_ops = {
+static const struct proc_ops target_ip_ops = {
     .proc_open       = target_ip_open,
     .proc_read       = seq_read,
     .proc_write      = target_ip_write,
@@ -237,7 +237,7 @@ const static struct proc_ops target_ip_ops = {
 #endif
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0)
-const static struct file_operations target_mac_ops = {
+static const struct file_operations target_mac_ops = {
     .owner      = THIS_MODULE,
     .open       = target_mac_open,
     .read       = seq_read,
@@ -246,7 +246,7 @@ const static struct file_operations target_mac_ops = {
     .release    = single_release
 };
 #else
-const static struct proc_ops target_mac_ops = {
+static const struct proc_ops target_mac_ops = {
     .proc_open       = target_mac_open,
     .proc_read       = seq_read,
     .proc_write      = target_mac_write,
@@ -256,7 +256,7 @@ const static struct proc_ops target_mac_ops = {
 #endif
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0)
-const static struct file_operations mode_ops = {
+static const struct file_operations mode_ops = {
     .owner      = THIS_MODULE,
     .open       = mode_open,
     .read       = seq_read,
@@ -265,7 +265,7 @@ const static struct file_operations mode_ops = {
     .release    = single_release
 };
 #else
-const static struct proc_ops mode_ops = {
+static const struct proc_ops mode_ops = {
     .proc_open       = mode_open,
     .proc_read       = seq_read,
     .proc_write      = mode_write,
@@ -275,7 +275,7 @@ const static struct proc_ops mode_ops = {
 #endif
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0)
-const static struct file_operations iface_ops = {
+static const struct file_operations iface_ops = {
     .owner      = THIS_MODULE,
     .open       = iface_open,
     .read       = seq_read,
@@ -284,7 +284,7 @@ const static struct file_operations iface_ops = {
     .release    = single_release
 };
 #else
-const static struct proc_ops iface_ops = {
+static const struct proc_ops iface_ops = {
     .proc_open       = iface_open,
     .proc_read       = seq_read,
     .proc_write      = iface_write,
