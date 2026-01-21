@@ -9,7 +9,7 @@
 #include <linux/version.h>
 #include <linux/slab.h>
 #include <linux/jhash.h>
-#include <asm/unaligned.h>
+#include <linux/unaligned.h>
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 #include <linux/etherdevice.h>
