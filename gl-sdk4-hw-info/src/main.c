@@ -10,6 +10,7 @@
 
 #include <linux/module.h>
 #include <linux/module.h>
+#include <linux/platform_device.h>
 #include <linux/sizes.h>
 #include <linux/of.h>
 #include <linux/of_address.h>
@@ -21,6 +22,7 @@
 #include <linux/slab.h>
 #include <linux/uaccess.h>
 #include <linux/string.h>
+#include <linux/version.h>
 
 struct glinet_hw_info gl_hw_info = {};
 
