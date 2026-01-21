@@ -64,11 +64,18 @@ static int gl_hw_info_probe(struct platform_device *pdev)
     return 0;
 }
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 11, 0)
 static int gl_hw_info_remove(struct platform_device *pdev)
 {
     printk("remove gl_hw_info\n");
     return 0;
 }
+#else
+static void gl_hw_info_remove(struct platform_device *pdev)
+{
+    printk("remove gl_hw_info\n");
+}
+#endif
 
 static const struct of_device_id gl_hw_info_match[] = {
     { .compatible = "gl-hw-info" },
@@ -185,4 +192,3 @@ module_exit(gl_hw_info_exit);
 
 MODULE_AUTHOR("Chongjun Luo <luochongjun@gl-inet.com>");
 MODULE_LICENSE("GPL");
-
